@@ -1,0 +1,74 @@
+[gd_scene load_steps=11 format=3 uid="uid://xdw86d73qdcf"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_dsv0d"]
+[ext_resource type="Texture2D" uid="uid://33lyot5u8r34" path="res://assets/visual/kenney_pixel-platformer/Tiles/Characters/tile_0000.png" id="2_3c5bb"]
+[ext_resource type="AudioStream" uid="uid://bj7seftwfkbjk" path="res://assets/audio/kenney_digital-audio/Audio/phaseJump1.ogg" id="3_51nli"]
+[ext_resource type="AudioStream" uid="uid://c1t5tla5fnjt5" path="res://assets/audio/kenney_digital-audio/Audio/phaseJump2.ogg" id="4_b4slb"]
+[ext_resource type="AudioStream" uid="uid://c1jjjeieavi6m" path="res://assets/audio/kenney_digital-audio/Audio/phaseJump3.ogg" id="5_4hmfu"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qpmu0"]
+radius = 8.0
+height = 16.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_nl5ej"]
+streams_count = 3
+stream_0/stream = ExtResource("3_51nli")
+stream_1/stream = ExtResource("4_b4slb")
+stream_2/stream = ExtResource("5_4hmfu")
+
+[sub_resource type="Gradient" id="Gradient_xvk57"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_37a5y"]
+gradient = SubResource("Gradient_xvk57")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qd7kh"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(3, 1, 1)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 19.73
+initial_velocity_max = 46.05
+gravity = Vector3(0, 98, 0)
+scale_min = 2.0
+scale_max = 3.0
+color = Color(0.339517, 0.140065, 0.0935699, 1)
+color_ramp = SubResource("GradientTexture1D_37a5y")
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 3
+script = ExtResource("1_dsv0d")
+
+[node name="Tile0000" type="Sprite2D" parent="."]
+position = Vector2(0, -12)
+texture = ExtResource("2_3c5bb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -8)
+shape = SubResource("CapsuleShape2D_qpmu0")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_vertical_offset = -0.47
+drag_left_margin = 0.1
+drag_top_margin = 0.0
+drag_right_margin = 0.1
+drag_bottom_margin = 0.55
+editor_draw_drag_margin = true
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_nl5ej")
+
+[node name="JumpParticles" type="GPUParticles2D" parent="."]
+position = Vector2(0, 6)
+emitting = false
+process_material = SubResource("ParticleProcessMaterial_qd7kh")
+lifetime = 0.2
+one_shot = true
+explosiveness = 0.86
